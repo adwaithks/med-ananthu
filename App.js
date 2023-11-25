@@ -1,20 +1,53 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Recharge from "./Recharge";
+import PurchaseDetails from "./PurchaseDetails";
+import Login from "./Login";
+import React, { useState } from "react";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function Home() {
+	const [balance, setBalance] = useState(1000);
+
+	return (
+		<Tab.Navigator>
+			<Tab.Screen
+				name="PurchaseDetails"
+				children={() => (
+					<PurchaseDetails
+						balance={balance}
+						setBalance={setBalance}
+					/>
+				)}
+			/>
+			<Tab.Screen
+				name="Recharge"
+				children={() => (
+					<Recharge balance={balance} setBalance={setBalance} />
+				)}
+			/>
+		</Tab.Navigator>
+	);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function App() {
+	return (
+		<NavigationContainer>
+			<Stack.Navigator>
+				<Stack.Screen name="Login" component={Login} />
+				<Stack.Screen
+					options={{
+						headerShown: false,
+					}}
+					name="Home"
+					component={Home}
+				/>
+			</Stack.Navigator>
+		</NavigationContainer>
+	);
+}
+
+export default App;
